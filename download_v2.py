@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 from apiclient import errors
 from colorama import init,Fore,Back,Style
 from termcolor import colored
@@ -6,13 +8,24 @@ from apiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
+
+# oauth2client is deprecated / we will use Google API
+# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib
+"""
+import pickle
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+"""
 import io
 import os
 import sys
 import re
 
+# apiclient, termcolor
+# google-api-python-client google-auth-httplib2 google-auth-oauthlib
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/drive'
+# SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
 def main():
     """
@@ -24,47 +37,87 @@ def main():
     # now, to clear the screen
     cls()
 
-    print colored(' _______  _______  _______  _______  ___      _______    ______   ______    ___   __   __  _______ ', 'red')
-    print colored('|       ||       ||       ||       ||   |    |       |  |      | |    _ |  |   | |  | |  ||       |', 'red')
-    print colored('|    ___||   _   ||   _   ||    ___||   |    |    ___|  |  _    ||   | ||  |   | |  |_|  ||    ___|', 'red')
-    print colored('|   | __ |  | |  ||  | |  ||   | __ |   |    |   |___   | | |   ||   |_||_ |   | |       ||   |___ ', 'yellow')
-    print colored('|   ||  ||  |_|  ||  |_|  ||   ||  ||   |___ |    ___|  | |_|   ||    __  ||   | |       ||    ___|', 'yellow')
-    print colored('|   |_| ||       ||       ||   |_| ||       ||   |___   |       ||   |  | ||   |  |     | |   |___ ', 'green')
-    print colored('|_______||_______||_______||_______||_______||_______|  |______| |___|  |_||___|   |___|  |_______|', 'green')
-    print colored('     ______   _______  _     _  __    _  ___      _______  _______  ______   _______  ______       ', 'blue')
-    print colored('    |      | |       || | _ | ||  |  | ||   |    |       ||   _   ||      | |       ||    _ |      ', 'blue')
-    print colored('    |  _    ||   _   || || || ||   |_| ||   |    |   _   ||  |_|  ||  _    ||    ___||   | ||      ', 'magenta')
-    print colored('    | | |   ||  | |  ||       ||       ||   |    |  | |  ||       || | |   ||   |___ |   |_||_     ', 'magenta')
-    print colored('    | |_|   ||  |_|  ||       ||  _    ||   |___ |  |_|  ||       || |_|   ||    ___||    __  |    ', 'cyan')
-    print colored('    |       ||       ||   _   || | |   ||       ||       ||   _   ||       ||   |___ |   |  | |    ', 'cyan')
-    print colored('    |______| |_______||__| |__||_|  |__||_______||_______||__| |__||______| |_______||___|  |_|    ', 'cyan')
-    print colored('===================================================================================================', 'white')
-    print colored('                                         Version: ', 'yellow'), (1.0)
-    print colored('                                         Author : ', 'yellow'), ('Blavk')
-    print colored('                                         Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader')
+    print(colored(' _______  _______  _______  _______  ___      _______    ______   ______    ___   __   __  _______ ', 'red'))
+    print(colored('|       ||       ||       ||       ||   |    |       |  |      | |    _ |  |   | |  | |  ||       |', 'red'))
+    print(colored('|    ___||   _   ||   _   ||    ___||   |    |    ___|  |  _    ||   | ||  |   | |  |_|  ||    ___|', 'red'))
+    print(colored('|   | __ |  | |  ||  | |  ||   | __ |   |    |   |___   | | |   ||   |_||_ |   | |       ||   |___ ', 'yellow'))
+    print(colored('|   ||  ||  |_|  ||  |_|  ||   ||  ||   |___ |    ___|  | |_|   ||    __  ||   | |       ||    ___|', 'yellow'))
+    print(colored('|   |_| ||       ||       ||   |_| ||       ||   |___   |       ||   |  | ||   |  |     | |   |___ ', 'green'))
+    print(colored('|_______||_______||_______||_______||_______||_______|  |______| |___|  |_||___|   |___|  |_______|', 'green'))
+    print(colored('     ______   _______  _     _  __    _  ___      _______  _______  ______   _______  ______       ', 'blue'))
+    print(colored('    |      | |       || | _ | ||  |  | ||   |    |       ||   _   ||      | |       ||    _ |      ', 'blue'))
+    print(colored('    |  _    ||   _   || || || ||   |_| ||   |    |   _   ||  |_|  ||  _    ||    ___||   | ||      ', 'magenta'))
+    print(colored('    | | |   ||  | |  ||       ||       ||   |    |  | |  ||       || | |   ||   |___ |   |_||_     ', 'magenta'))
+    print(colored('    | |_|   ||  |_|  ||       ||  _    ||   |___ |  |_|  ||       || |_|   ||    ___||    __  |    ', 'cyan'))
+    print(colored('    |       ||       ||   _   || | |   ||       ||       ||   _   ||       ||   |___ |   |  | |    ', 'cyan'))
+    print(colored('    |______| |_______||__| |__||_|  |__||_______||_______||__| |__||______| |_______||___|  |_|    ', 'cyan'))
+    print(colored('===================================================================================================', 'white'))
+    print(colored('                                         Version: ', 'yellow'), (1.1))
+    print(colored('                                         Author : ', 'yellow'), ('Blavk'))
+    print(colored('                                         Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader'))
+    
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
     service = build('drive', 'v3', http=creds.authorize(Http()))
-    print colored('* Directory to save - by default it will be current directory', 'blue')
-    # Read parameters from text file with the following format for each folder
-    # ====
-    # /path/to/save
-    # folder name
-    # <Folder ID>
-    # ====
-    input_file = open(sys.argv[1].rstrip())
-    location = input_file.readline().rstrip()
-    folder_name = input_file.readline().rstrip()
-    folder_id = input_file.readline().rstrip()
-    type(location)
-    type(folder_name)
-    type(folder_id)
-    print colored('* Main-directory: ', 'blue'), colored(location, 'red')
-    print colored('* Sub-directory: ', 'blue'), colored(folder_name, 'red')
-    print colored('* Folder ID: ', 'blue'), colored(folder_id, 'red')
+    
+    
+    # oauth2client is deprecated / we will use new Google API in next version
+    """
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        # with open('token.pickle', 'wb') as token:
+        #    pickle.dump(creds, token)
+    service = build('drive', 'v3', credentials=creds)
+    """
+    print(colored('* Directory to save - by default it will be current directory', 'blue'))
+    if(len(sys.argv))<2:
+        # From Python 3, raw_input() changed to input()
+        print(colored('* Main-directory: ', 'blue'))
+        location = input("   - Path: ")
+        while not location:
+            location = input("   - Path: ")
+        type(location)
+        print(colored('* Sub-directory: ', 'blue'))
+        folder_name = input("   - Path: ")
+        while not folder_name:
+            folder_name = input("   - Path: ")
+        type(folder_name)
+        print(colored('* GDrive Folder/File ID: ','blue'))
+        folder_id = input("   - ID  : ")
+        while not folder_id:
+            folder_id = input("   - ID  : ")
+        type(folder_id)
+    else:
+        # Read parameters from text file with the following format
+        # ====
+        # /path/to/save
+        # folder_name
+        # <Folder ID>
+        # ====
+        with(open(sys.argv[1].rstrip())) as f:
+            location = f.readline().rstrip()
+            folder_name = f.readline().rstrip()
+            folder_id = f.readline().rstrip()
+        type(location)
+        type(folder_name)
+        type(folder_id)
+        print(colored('* Main-directory: ', 'blue'), colored(location, 'red'))
+        print(colored('* Sub-directory: ', 'blue'), colored(folder_name, 'red'))
+        print(colored('* GDrive Folder/File ID: ', 'blue'), colored(folder_id, 'red'))
     
     if location[-1] != '/':
         location += '/'
@@ -75,8 +128,8 @@ def main():
         folder_name = unicode(folder_name, 'utf-8')
         download_folder(service, folder_id, location, folder_name)
 
-    except errors.HttpError, error:
-        print 'An error occurred: {}'.format(error)
+    except errors.HttpError as error:
+        print('An error occurred: {}'.format(error))
 
 def download_folder(service, folder_id, location, folder_name):
     if not os.path.exists(location + folder_name):
@@ -92,16 +145,16 @@ def download_folder(service, folder_id, location, folder_name):
 
     total = len(result)
     if total == 0:
-        print colored('Folder is empty!', 'red')
+        print(colored('Folder is empty!', 'red'))
         sys.exit()
     else:
-        print colored('START DOWNLOADING', 'yellow')
+        print(colored('START DOWNLOADING', 'yellow'))
     current = 1
     for item in result:
         file_id = item[u'id']
         filename = no_accent_vietnamese(item[u'name'])
         mime_type = item[u'mimeType']
-        print '- ', colored(filename, 'cyan'), colored(mime_type, 'cyan'), '({}/{})'.format(current, total)
+        print('- ', colored(filename, 'cyan'), colored(mime_type, 'cyan'), '({}/{})'.format(current, total))
         if mime_type == 'application/vnd.google-apps.folder':
             download_folder(service, file_id, location, filename)
         elif not os.path.isfile('{}{}'.format(location, filename)):
@@ -110,14 +163,14 @@ def download_folder(service, folder_id, location, folder_name):
             remote_size = item[u'size']
             local_size = os.path.getsize('{}{}'.format(location, filename))
             if (str(remote_size) == str(local_size)):
-                print colored('File existed!', 'magenta')
+                print(colored('File existed!', 'magenta'))
             else:
-                print colored('Local File corrupted', 'red')
+                print(colored('Local File corrupted', 'red'))
                 os.remove('{}{}'.format(location, filename))
                 download_file(service, file_id, location, filename)
         current += 1
         percent = float((current-1))/float(total)*100
-        print colored("%.2f percent completed!" % percent,'green')
+        print(colored("%.2f percent completed!" % percent,'green'))
 
 
 def download_file(service, file_id, location, filename):
@@ -129,10 +182,10 @@ def download_file(service, file_id, location, filename):
         status, done = downloader.next_chunk()
         if status:
             #print '\rDownload {}%.'.format(int(status.progress() * 100)),
-            print int(status.progress() * 100)," percent complete         \r",
+            print(int(status.progress() * 100)," percent complete         \r",)
             #sys.stdout.flush()
-    print ""
-    print colored(('%s downloaded!' % filename), 'green')
+    print("")
+    print(colored(('%s downloaded!' % filename), 'green'))
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 def no_accent_vietnamese(s):
