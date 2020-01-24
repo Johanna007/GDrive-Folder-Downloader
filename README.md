@@ -12,8 +12,8 @@ The script requires `credentials.json` in the same working directory for Google 
 
 ### Usage
 
-* **Interactive Mode:** just run the script directly from command line "*python download_v2.py*" then follow instruction to input parameters to initialize download.
-* **Batch Mode:** if you love to use shell for unattended downloadings, this mode is for you. For each folder, you create one text file with the contents
+**Interactive Mode:** just run the script directly from command line "*python download_v2.py*" then follow instruction to input parameters to initialize download.
+**Batch Mode:** if you love to use shell for unattended downloadings, this mode is for you. For each folder, you create one text file with the contents
 * Local Path
 * Local Folder Name
 * Google Folder ID
