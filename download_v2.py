@@ -10,12 +10,8 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 
 # oauth2client is deprecated / we will use Google API
-# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib
-"""
-import pickle
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-"""
+# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client
+
 import io
 import os
 import sys
@@ -62,27 +58,7 @@ def main():
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
     service = build('drive', 'v3', http=creds.authorize(Http()))
-    
-    
-    # oauth2client is deprecated / we will use new Google API in next version
-    """
-    creds = None
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        # with open('token.pickle', 'wb') as token:
-        #    pickle.dump(creds, token)
-    service = build('drive', 'v3', credentials=creds)
-    """
+  
     print(colored('* Directory to save - by default it will be current directory', 'blue'))
     if(len(sys.argv))<2:
         # From Python 3, raw_input() changed to input()
@@ -125,7 +101,8 @@ def main():
         folder = service.files().list(
             q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(folder_name),
             fields='files(id)').execute()
-        folder_name = unicode(folder_name, 'utf-8')
+        # Python 3 / Unicode by default
+        # folder_name = str(folder_name, encoding='utf-8')
         download_folder(service, folder_id, location, folder_name)
 
     except errors.HttpError as error:
