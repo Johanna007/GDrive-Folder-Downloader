@@ -51,7 +51,7 @@ def main():
     print(colored('                             Version : ', 'yellow'), (1.1))
     print(colored('                              Author : ', 'yellow'), ('Blavk'))
     print(colored('                              Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader'))
-    print(colored('            Fork to port to Python 3 : ', 'yellow'), ('https://https://github.com/haindvn/GDrive-Folder-Downloader'))
+    print(colored('            Fork to port to Python 3 : ', 'yellow'), ('https://github.com/haindvn/GDrive-Folder-Downloader'))
     
     store = file.Storage('token.json')
     creds = store.get()
