@@ -48,9 +48,10 @@ def main():
     print(colored('    |       ||       ||   _   || | |   ||       ||       ||   _   ||       ||   |___ |   |  | |    ', 'cyan'))
     print(colored('    |______| |_______||__| |__||_|  |__||_______||_______||__| |__||______| |_______||___|  |_|    ', 'cyan'))
     print(colored('===================================================================================================', 'white'))
-    print(colored('                                         Version: ', 'yellow'), (1.1))
-    print(colored('                                         Author : ', 'yellow'), ('Blavk'))
-    print(colored('                                         Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader'))
+    print(colored('                             Version : ', 'yellow'), (1.1))
+    print(colored('                              Author : ', 'yellow'), ('Blavk'))
+    print(colored('                              Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader'))
+    print(colored('            Fork to port to Python 3 : ', 'yellow'), ('https://github.com/haindvn/GDrive-Folder-Downloader'))
     
     store = file.Storage('token.json')
     creds = store.get()
@@ -158,9 +159,7 @@ def download_file(service, file_id, location, filename):
     while done is False:
         status, done = downloader.next_chunk()
         if status:
-            #print '\rDownload {}%.'.format(int(status.progress() * 100)),
-            print(int(status.progress() * 100)," percent complete         \r",)
-            #sys.stdout.flush()
+            print(int(status.progress() * 100)," percent completed   \r",end='',flush=True)
     print("")
     print(colored(('%s downloaded!' % filename), 'green'))
 def cls():
