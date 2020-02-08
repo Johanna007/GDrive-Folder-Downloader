@@ -25,3 +25,18 @@ Then initialize unattended downloading from shell/command line via
 ```
 $ python download_v2.py <text_file>
 ```
+
+**Hint:** you can download many folders at once by creating many input files *<text_file_1>,<text_file_2>,<text_file_3>,<text_file_4>*..etc for many folders, then create a batch file (Windows) or bash shell cript (Linux) then call them at once (use **screen** in Linux if you connect via SSH / then you can safely log out/resume later without downloading interruption). 
+
+Batch file *download.bat* or bash shell script *download.sh* content
+```
+python3 download_v2.py <text_file_1>
+python3 download_v2.py <text_file_2>
+python3 download_v2.py <text_file_3>
+python3 download_v2.py <text_file_4>
+```
+Then
+```
+$ chmod +x download.sh
+$ ./download.sh
+```
