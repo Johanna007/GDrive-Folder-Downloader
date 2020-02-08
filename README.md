@@ -1,4 +1,6 @@
 # Google Drive Downloader
+**Notes:** *download_v2.py* script is for Python 3 users and the others are for Python 2 (some codes that I sent to author via email years ago, it seems that he has not maintained the codes anymore since my pull requests are ignored).
+
 Google Drive Downloader
 
 ![alt text](https://github.com/duytran1406/gdrivedownloader/blob/master/myDl.png?raw=true)

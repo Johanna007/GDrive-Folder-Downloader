@@ -159,7 +159,7 @@ def download_file(service, file_id, location, filename):
         status, done = downloader.next_chunk()
         if status:
             #print '\rDownload {}%.'.format(int(status.progress() * 100)),
-            print(int(status.progress() * 100)," percent complete         \r",)
+            print(int(status.progress() * 100)," percent completed       ",)
             #sys.stdout.flush()
     print("")
     print(colored(('%s downloaded!' % filename), 'green'))
