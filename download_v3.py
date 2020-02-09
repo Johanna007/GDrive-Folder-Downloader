@@ -180,7 +180,8 @@ def no_accent_vietnamese(s):
     s = re.sub(u'[ỲÝỴỶỸ]', 'Y', s)
     s = re.sub(u'[Đ]', 'D', s)
     s = re.sub(u'[đ]', 'd', s)
-    return s.encode('utf-8')
+    return s
+    #return s.encode('utf-8')
 
 if __name__ == '__main__':
     main()
