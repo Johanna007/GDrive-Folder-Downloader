@@ -1,27 +1,17 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-
 from apiclient import errors
-from colorama import init,Fore,Back,Style
 from termcolor import colored
 from apiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
-
-# oauth2client is deprecated / we will use Google API
-# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client
-
 import io
 import os
 import sys
 import re
 
-# apiclient, termcolor
-# google-api-python-client google-auth-httplib2 google-auth-oauthlib
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/drive'
-# SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
 def main():
     """
@@ -33,81 +23,40 @@ def main():
     # now, to clear the screen
     cls()
 
-    print(colored(' _______  _______  _______  _______  ___      _______    ______   ______    ___   __   __  _______ ', 'red'))
-    print(colored('|       ||       ||       ||       ||   |    |       |  |      | |    _ |  |   | |  | |  ||       |', 'red'))
-    print(colored('|    ___||   _   ||   _   ||    ___||   |    |    ___|  |  _    ||   | ||  |   | |  |_|  ||    ___|', 'red'))
-    print(colored('|   | __ |  | |  ||  | |  ||   | __ |   |    |   |___   | | |   ||   |_||_ |   | |       ||   |___ ', 'yellow'))
-    print(colored('|   ||  ||  |_|  ||  |_|  ||   ||  ||   |___ |    ___|  | |_|   ||    __  ||   | |       ||    ___|', 'yellow'))
-    print(colored('|   |_| ||       ||       ||   |_| ||       ||   |___   |       ||   |  | ||   |  |     | |   |___ ', 'green'))
-    print(colored('|_______||_______||_______||_______||_______||_______|  |______| |___|  |_||___|   |___|  |_______|', 'green'))
-    print(colored('     ______   _______  _     _  __    _  ___      _______  _______  ______   _______  ______       ', 'blue'))
-    print(colored('    |      | |       || | _ | ||  |  | ||   |    |       ||   _   ||      | |       ||    _ |      ', 'blue'))
-    print(colored('    |  _    ||   _   || || || ||   |_| ||   |    |   _   ||  |_|  ||  _    ||    ___||   | ||      ', 'magenta'))
-    print(colored('    | | |   ||  | |  ||       ||       ||   |    |  | |  ||       || | |   ||   |___ |   |_||_     ', 'magenta'))
-    print(colored('    | |_|   ||  |_|  ||       ||  _    ||   |___ |  |_|  ||       || |_|   ||    ___||    __  |    ', 'cyan'))
-    print(colored('    |       ||       ||   _   || | |   ||       ||       ||   _   ||       ||   |___ |   |  | |    ', 'cyan'))
-    print(colored('    |______| |_______||__| |__||_|  |__||_______||_______||__| |__||______| |_______||___|  |_|    ', 'cyan'))
-    print(colored('===================================================================================================', 'white'))
-    print(colored('                             Version : ', 'yellow'), (1.1))
-    print(colored('                              Author : ', 'yellow'), ('Blavk'))
-    print(colored('                              Github : ', 'yellow'), ('https://github.com/duytran1406/gdrivedownloader'))
-    print(colored('            Fork to port to Python 3 : ', 'yellow'), ('https://github.com/haindvn/GDrive-Folder-Downloader'))
-    
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
     service = build('drive', 'v3', http=creds.authorize(Http()))
-  
-    print(colored('* Directory to save - by default it will be current directory', 'blue'))
-    if(len(sys.argv))<2:
-        # From Python 3, raw_input() changed to input()
-        print(colored('* Main-directory: ', 'blue'))
-        location = input("   - Path: ")
-        while not location:
-            location = input("   - Path: ")
-        type(location)
-        print(colored('* Sub-directory: ', 'blue'))
-        folder_name = input("   - Path: ")
-        while not folder_name:
-            folder_name = input("   - Path: ")
-        type(folder_name)
-        print(colored('* GDrive Folder/File ID: ','blue'))
+    print ('* Directory to save - by default it will be current directory')
+    location = input("   - Path: ")
+    while not location:
+        location = raw_input("   - Path: ")
+    type(location)
+    print ('* Sub-directory: ')
+    folder_name = input("   - Path: ")
+    while not folder_name:
+        folder_name = raw_input("   - Path: ")
+    type(folder_name)
+    print ('* GDrive Folder/File ID: ')
+    folder_id = input("   - ID  : ")
+    while not folder_id:
         folder_id = input("   - ID  : ")
-        while not folder_id:
-            folder_id = input("   - ID  : ")
-        type(folder_id)
-    else:
-        # Read parameters from text file with the following format
-        # ====
-        # /path/to/save
-        # folder_name
-        # <Folder ID>
-        # ====
-        with(open(sys.argv[1].rstrip())) as f:
-            location = f.readline().rstrip()
-            folder_name = f.readline().rstrip()
-            folder_id = f.readline().rstrip()
-        type(location)
-        type(folder_name)
-        type(folder_id)
-        print(colored('* Main-directory: ', 'blue'), colored(location, 'red'))
-        print(colored('* Sub-directory: ', 'blue'), colored(folder_name, 'red'))
-        print(colored('* GDrive Folder/File ID: ', 'blue'), colored(folder_id, 'red'))
-    
+    type(folder_id)
+
+    #if len(sys.argv) > 2:
+        #location = unicode(sys.argv[2], 'utf-8')
     if location[-1] != '/':
         location += '/'
-    try:
-        folder = service.files().list(
+    
+    folder = service.files().list(
             q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(folder_name),
             fields='files(id)').execute()
-        # Python 3 / Unicode by default
-        # folder_name = str(folder_name, encoding='utf-8')
-        download_folder(service, folder_id, location, folder_name)
+    folder_name = unicode(folder_name, 'utf-8')
+    download_folder(service, folder_id, location, folder_name)
 
-    except errors.HttpError as error:
-        print('An error occurred: {}'.format(error))
+    
 
 def download_folder(service, folder_id, location, folder_name):
     if not os.path.exists(location + folder_name):
@@ -123,16 +72,16 @@ def download_folder(service, folder_id, location, folder_name):
 
     total = len(result)
     if total == 0:
-        print(colored('Folder is empty!', 'red'))
+        print ('Folder is empty!')
         sys.exit()
     else:
-        print(colored('START DOWNLOADING', 'yellow'))
+        print ('START DOWNLOADING')
     current = 1
     for item in result:
         file_id = item[u'id']
         filename = no_accent_vietnamese(item[u'name'])
         mime_type = item[u'mimeType']
-        print('- ', colored(filename, 'cyan'), colored(mime_type, 'cyan'), '({}/{})'.format(current, total))
+        #print '- ', filename, mime_type, '({}/{})'.format(current, total)
         if mime_type == 'application/vnd.google-apps.folder':
             download_folder(service, file_id, location, filename)
         elif not os.path.isfile('{}{}'.format(location, filename)):
@@ -141,14 +90,14 @@ def download_folder(service, folder_id, location, folder_name):
             remote_size = item[u'size']
             local_size = os.path.getsize('{}{}'.format(location, filename))
             if (str(remote_size) == str(local_size)):
-                print(colored('File existed!', 'magenta'))
+                print ('File existed!')
             else:
-                print(colored('Local File corrupted', 'red'))
+                print ('Local File corrupted')
                 os.remove('{}{}'.format(location, filename))
                 download_file(service, file_id, location, filename)
         current += 1
         percent = float((current-1))/float(total)*100
-        print(colored("%.2f percent completed!" % percent,'green'))
+        print ("%.2f percent completed!" % percent)
 
 
 def download_file(service, file_id, location, filename):
@@ -159,9 +108,11 @@ def download_file(service, file_id, location, filename):
     while done is False:
         status, done = downloader.next_chunk()
         if status:
-            print(int(status.progress() * 100)," percent completed   \r",end='',flush=True)
-    print("")
-    print(colored(('%s downloaded!' % filename), 'green'))
+            #print '\rDownload {}%.'.format(int(status.progress() * 100)),
+            print (int(status.progress() * 100)," percent complete         \r"),
+            #sys.stdout.flush()
+    print ("")
+    print ('%s downloaded!' % filename)
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 def no_accent_vietnamese(s):
