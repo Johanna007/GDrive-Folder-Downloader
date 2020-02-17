@@ -5,11 +5,16 @@ Google Drive Downloader
 ![alt text](https://github.com/duytran1406/gdrivedownloader/blob/master/myDl.png?raw=true)
 
 
-## Getting Started
+## Getting Started / Required Packages
 
-You need to enable the Drive API to use the script.
-The enabling instructions can be found on [Python Quickstart](https://developers.google.com/drive/api/v3/quickstart/python).<br/>
-The script requires `credentials.json` in the same working directory for Google Drive authorization.
+* Please install `google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client tqdm` via pip3 first
+
+```
+pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client tqdm
+```
+
+* You need to enable the Drive API to use the script, the enabling instructions can be found on [Python Quickstart](https://developers.google.com/drive/api/v3/quickstart/python).
+* The script requires `credentials.json` in the same working directory for Google Drive authorization.
 
 **Notes:** please use correct version
 * *download.py*: Python 2+ original script
@@ -27,7 +32,7 @@ The script requires `credentials.json` in the same working directory for Google 
 
 Then initialize unattended downloading from shell/command line via 
 ```
-$ python download_v3.py <text_file>
+$ python3 download_v3.py <text_file>
 ```
 
 **Hint:** you can download many folders at once by creating many input files *<text_file_1>,<text_file_2>,<text_file_3>,<text_file_4>*..etc for many folders, then create a batch file (Windows) or bash shell cript (Linux) then call them at once (use **screen** in Linux if you connect via SSH / then you can safely log out/resume later without downloading interruption). 

@@ -8,9 +8,10 @@ from apiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
+from tqdm import tqdm
 
 # oauth2client is deprecated / we will use Google API
-# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client
+# pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib apiclient termcolor oauth2client tqdm
 
 import io
 import os
@@ -136,6 +137,7 @@ def download_folder(service, folder_id, location, folder_name):
         if mime_type == 'application/vnd.google-apps.folder':
             download_folder(service, file_id, location, filename)
         elif not os.path.isfile('{}{}'.format(location, filename)):
+            print(f"File size: {item[u'size']} bytes")
             download_file(service, file_id, location, filename)
         else:
             remote_size = item[u'size']
@@ -145,10 +147,11 @@ def download_folder(service, folder_id, location, folder_name):
             else:
                 print(colored('Local File corrupted', 'red'))
                 os.remove('{}{}'.format(location, filename))
+                print(f"File size: {item[u'size']} bytes")
                 download_file(service, file_id, location, filename)
         current += 1
         percent = float((current-1))/float(total)*100
-        print(colored("%.2f percent completed!" % percent,'green'))
+        print(colored("%.2f percent of batches completed!" % percent,'yellow'))
 
 
 def download_file(service, file_id, location, filename):
@@ -156,10 +159,18 @@ def download_file(service, file_id, location, filename):
     fh = io.FileIO('{}{}'.format(location, filename), 'wb')
     downloader = MediaIoBaseDownload(fh, request,chunksize=1024*1024)
     done = False
+    progressbar = tqdm(total=100,desc="Downloading",ncols=70, unit_scale=True)
+    last_status = 0
+    this_status = 0
     while done is False:
         status, done = downloader.next_chunk()
         if status:
-            print(int(status.progress() * 100)," percent completed   \r",end='',flush=True)
+            #print(int(status.progress() * 100)," percent completed   \r",end='',flush=True)
+            progressbar.update(this_status - last_status) 
+            last_status = this_status
+            this_status = float(status.progress() * 100)
+            
+    progressbar.close()
     print("")
     print(colored(('%s downloaded!' % filename), 'green'))
 def cls():
