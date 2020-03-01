@@ -1,9 +1,7 @@
 # Google Drive Downloader
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
-Google Drive Downloader
-
-![alt text](https://github.com/duytran1406/gdrivedownloader/blob/master/myDl.png?raw=true)
-
+![alt text](https://github.com/haindvn/GDrive-Folder-Downloader/blob/master/myDLv2.PNG?raw=true)
 
 ## Getting Started / Required Packages
 
@@ -14,7 +12,7 @@ pip3 install google-api-python-client google-auth-httplib2 google-auth-oauthlib 
 ```
 
 * You need to enable the Drive API to use the script, the enabling instructions can be found on [Python Quickstart](https://developers.google.com/drive/api/v3/quickstart/python).
-* The script requires `credentials.json` in the same working directory for Google Drive authorization.
+* The script requires 2 generated files `credentials.json` and `token.json` from the Drive API enable processes in the same working directory of the script for Google Drive authorization.
 
 **Notes:** please use correct version
 * *download.py*: Python 2+ original script
