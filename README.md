@@ -1,9 +1,7 @@
 # Google Drive Downloader
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
-Google Drive Downloader
-
-![alt text](https://github.com/duytran1406/gdrivedownloader/blob/master/myDl.png?raw=true)
-
+![alt text](https://github.com/haindvn/GDrive-Folder-Downloader/blob/master/myDLv2.PNG?raw=true)
 
 ## Getting Started / Required Packages
 
